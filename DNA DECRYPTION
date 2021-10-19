@@ -1,0 +1,187 @@
+##USING REVERSE 2-3-3 LSB ALGORITHM
+
+def amino_to_codons(z):
+  
+  cods = []
+  num_cod = ""
+
+  for dons in range(0, len(z), 2):
+
+    num_cod = z[dons+1]
+
+    if z[dons] == 'A':
+      if num_cod == 0:
+        cods.append("GCC")
+      if num_cod == 1:
+        cods.append("GCA")
+      if num_cod == 2:
+        cods.append("GCG")
+
+    if z[dons] == 'B':
+      if num_cod == 0:
+        cods.append("TAA")
+      if num_cod == 1:
+        cods.append("TGA")
+      if num_cod == 2:
+        cods.append("TAG")
+
+
+    if z[dons] == "C":
+      if num_cod == 0:
+        cods.append("TGT")
+      if num_cod == 1:
+        cods.append("TGC")
+
+    if z[dons] == "D":
+      if num_cod == 0:
+        cods.append("GAT")
+      if num_cod == 1:
+        cods.append("GAC")
+
+    if z[dons] == "E":
+      if num_cod == 0:
+        cods.append("GAA")
+      if num_cod == 1:
+        cods.append("GAG") 
+
+    if z[dons] == "F":
+      if num_cod == 0:
+        cods.append("TTT")
+      if num_cod == 1:
+        cods.append("TTC") 
+
+    if z[dons] == "G":
+      if num_cod == 0:
+        cods.append("GGT")
+      if num_cod == 1:
+        cods.append("GGC")
+      if num_cod == 2:
+        cods.append("GGA")
+      if num_cod == 3:
+        cods.append("GGG")
+
+    if z[dons] == "H":
+      if num_cod == 0:
+        cods.append("CAT")
+      if num_cod == 1:
+        cods.append("CAC")
+
+    if z[dons] == "I":
+      if num_cod == 0:
+        cods.append("ATT")
+      if num_cod == 1:
+        cods.append("ATC")
+      if num_cod == 2:
+        cods.append("ATA")
+                                      
+    if z[dons] == "K":
+      if num_cod == 0:
+        cods.append("AAG")
+      if num_cod == 1:
+        cods.append("AAA")
+
+    if z[dons] == "L":
+      if num_cod == 0:
+        cods.append("CTT")
+      if num_cod == 1:
+        cods.append("CTC")
+      if num_cod == 2:
+        cods.append("CTA")
+      if num_cod == 3:
+        cods.append("CTG")
+
+    if z[dons] == "M":
+      if num_cod == 0:
+        cods.append("ATG")
+
+    if z[dons] == "N":
+      if num_cod == 0:
+        cods.append("AAT")
+      if num_cod == 1:
+        cods.append("AAC")
+
+    if z[dons] == "O":
+      if num_cod == 0:
+        cods.append("TTA")
+      if num_cod == 1:
+        cods.append("TTG")
+
+    if z[dons] == "P":
+      if num_cod == 0:
+        cods.append("CCT")
+      if num_cod == 1:
+        cods.append("CCC")
+      if num_cod == 2:
+        cods.append("CCG")
+
+    if z[dons] == "Q":
+      if num_cod == 0:
+        cods.append("CCA")
+      if num_cod == 1:
+        cods.append("CAG")
+
+    if z[dons] == "R":
+      if num_cod == 0:
+        cods.append("CGT")
+      if num_cod == 1:
+        cods.append("CGC")
+      if num_cod == 2:
+        cods.append("CGA")
+      if num_cod == 3:
+        cods.append("CGG")
+
+    if z[dons] == "S":
+      if num_cod == 0:
+        cods.append("TCT")
+      if num_cod == 1:
+        cods.append("TCC")
+      if num_cod == 2:
+        cods.append("TCA")
+      if num_cod == 3:
+        cods.append("TCG")
+
+    if z[dons] == "T":
+      if num_cod == 0:
+        cods.append("ACT")
+      if num_cod == 1:
+        cods.append("ACC")
+      if num_cod == 2:
+        cods.append("ACA")
+      if num_cod == 3:
+        cods.append("ACG")
+
+    if z[dons] == "U":
+      if num_cod == 0:
+        cods.append("AGA")
+      if num_cod == 1:
+        cods.append("AGG")
+
+    if z[dons] == "V":
+      if num_cod == 0:
+        cods.append("GTT")
+      if num_cod == 1:
+        cods.append("GCT")
+      if num_cod == 2:
+        cods.append("GTA")
+      if num_cod == 3:
+        cods.append("GTG")
+
+    if z[dons] == "W":
+      if num_cod == 0:
+        cods.append("TGG")
+
+    if z[dons] == "X":
+      if num_cod == 0:
+        cods.append("AGT")
+      if num_cod == 1:
+        cods.append("AGC")
+
+    if z[dons] == "Y":
+      if num_cod == 0:
+        cods.append("TAT")
+    
+    if z[dons] == "Z":
+      if num_cod == 0:
+        cods.append("TAC")
+          
+  return cods 
