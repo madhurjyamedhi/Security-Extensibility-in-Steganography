@@ -1,0 +1,54 @@
+#USING THE FRAME NUMBERS
+
+import cv2
+import sys
+import os.path
+from os import path
+
+if path.exists('/content/recovered_frames') == False:
+  os.mkdir('/content/recovered_frames')
+
+def rec_stegImage(key):
+  frame1, frame2, frame3 = key
+  print(frame1, frame2, frame3)
+  vid = cv2.VideoCapture('out.avi')
+  state, image = vid.read()
+  count = 0
+  while state :
+    
+    cv2.imwrite("/content/recovered_frames/frame.%03d.png" % count, image)
+    state, image = vid.read()
+    count += 1
+
+  rec_frame1 = Image.open("recovered_frames/frame.%03d.png" % frame1)
+  frame1_pixelMap = rec_frame1.load()
+  
+  rec_frame2 = Image.open("recovered_frames/frame.%03d.png" % frame2)
+  frame2_pixelMap = rec_frame2.load()
+
+  rec_frame3 = Image.open("recovered_frames/frame.%03d.png" % frame3)
+  frame3_pixelMap = rec_frame3.load()
+
+  recov_image = Image.new(rec_frame1.mode, rec_frame1.size)
+  recImage_pixelMap = recov_image.load()
+
+
+  for row in range(rec_frame1.size[0]):
+    for col in range(rec_frame1.size[1]):
+
+      m_r, m_g, m_b = rgb_to_bin(frame1_pixelMap[row, col])
+      mid_r, mid_g, mid_b = rgb_to_bin(frame2_pixelMap[row, col])
+      l_r, l_g, l_b = rgb_to_bin(frame3_pixelMap[row, col])
+
+      rgb = (m_r[5:] + mid_r[5:] + l_r[6:],
+             m_g[5:] + mid_g[5:] + l_g[6:],
+             m_b[5:] + mid_b[5:] + l_b[6:])
+      
+      recImage_pixelMap[row, col] = rgb_to_int(rgb)
+
+  recov_image.save("recovered_stegImage.png")
+
+  rec_frame1.close()
+  rec_frame2.close()
+  rec_frame3.close()
+  recov_image.close()
