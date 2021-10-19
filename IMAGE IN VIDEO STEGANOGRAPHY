@@ -1,0 +1,130 @@
+###USING 4-4 LSB ALGORITHM
+
+import numpy as np
+import math
+ 
+def PSNR_MSE(img1, img2):
+  mse = np.mean((img1 - img2) ** 2)
+  if mse == 0:
+    return (100, 0)
+  max_pixel = 255.0
+  psnr = 20 * math.log10(max_pixel / math.sqrt(mse))
+  return (psnr, mse)
+  import cv2
+from PIL import Image
+import random
+import os.path
+from os import path
+
+if path.exists('/content/frames') == False:
+  os.mkdir('/content/frames')
+  
+def video_stegano() :
+  #Taking in stegImage dimensions
+  steg_image = Image.open("stegoImage.png")
+  stegImage_pixelMap = steg_image.load()
+  width = steg_image.size[0]
+  height = steg_image.size[1]
+  print(height)
+  print(width)
+ 
+  #loading the video and reading it framewise
+  vidcap = cv2.VideoCapture('video.avi')
+  success,image = vidcap.read()
+ 
+ 
+  min_mse = 0
+  count = 0
+  frame_number = []
+ 
+  while success :
+    #resizing the frames of  the video to the size of the stego image so to calculate the mse and psnr
+    frame_image = cv2.resize(image, (width, height))
+    psnr_val, mse_val = PSNR_MSE(steg_image, frame_image)
+    
+    #keeping a count of the frames that holds the minimum mse
+    if count == 0:
+      min_mse = mse_val
+      frame_number.append(count)
+    else:
+      if mse_val <= min_mse:
+        frame_number.append(count)
+        min_mse = mse_val
+    
+    cv2.imwrite("/content/frames/frame.%03d.png" % count, frame_image)     # save frame as PNG file\
+ 
+    success,image = vidcap.read()
+    count += 1
+  
+ 
+  print("\n\ntotal no. of frames : ", count)  
+  print("\nminimum mse :", min_mse)
+  print("\nframes with minimum mse: ", frame_number)
+ 
+ 
+ 
+  #choosing random frames from the minimal mse frames to fit the stego image
+  rand_frame1 = random.choice(frame_number)
+  rand_frame2 = random.choice(frame_number)
+  rand_frame3 = random.choice(frame_number)
+
+  while (rand_frame1 == rand_frame2) or (rand_frame1 == rand_frame3):
+    rand_frame1 = random.choice(frame_number) 
+
+  while (rand_frame2 == rand_frame3) or (rand_frame2 == rand_frame1):
+    rand_frame2 = random.choice(frame_number)
+ 
+  while (rand_frame2 == rand_frame3) or (rand_frame3 == rand_frame1):
+    rand_frame3 = random.choice(frame_number)
+ 
+  print("Frame numbers : ", rand_frame1, rand_frame2, rand_frame3)
+ 
+ 
+  #embedding the stegoImage:
+  msb_frame = Image.open("frames/frame.%03d.png" % rand_frame1)
+  msbFrame_pixelMap = msb_frame.load()
+  
+  mid_frame = Image.open("frames/frame.%03d.png" % rand_frame2)
+  midFrame_pixelMap = mid_frame.load()
+
+  lsb_frame = Image.open("frames/frame.%03d.png" % rand_frame3)
+  lsbFrame_pixelMap = lsb_frame.load()
+  
+  msb_rgb = ""
+  mid_rgb = ""
+  lsb_rgb = ""
+  
+  for row in range(msb_frame.size[0]):
+    for col in range(msb_frame.size[1]):
+ 
+      m_r, m_g, m_b = rgb_to_bin(msbFrame_pixelMap[row, col])
+      mid_r, mid_g, mid_b = rgb_to_bin(midFrame_pixelMap[row, col])
+      l_r, l_g, l_b = rgb_to_bin(lsbFrame_pixelMap[row, col])
+      s_r, s_g, s_b = rgb_to_bin(stegImage_pixelMap[row, col])
+ 
+      
+      msb_rgb = (m_r[:5] + s_r[:3],
+                 m_g[:5] + s_g[:3],
+                 m_b[:5] + s_b[:3])
+      
+      msbFrame_pixelMap[row, col] = rgb_to_int(msb_rgb)
+
+      mid_rgb = (mid_r[:5] + s_r[3:6],
+                 mid_g[:5] + s_g[3:6],
+                 mid_b[:5] + s_b[3:6])
+      
+      midFrame_pixelMap[row, col] = rgb_to_int(mid_rgb)
+ 
+      lsb_rgb = (l_r[:6] + s_r[6:],
+                 l_g[:6] + s_g[6:],
+                 l_b[:6] + s_b[6:])
+     
+      
+      lsbFrame_pixelMap[row, col] = rgb_to_int(lsb_rgb)
+      
+  msb_frame.save("frames/frame%d.png" % rand_frame1)
+  mid_frame.save("frames/frame%d.png" % rand_frame2)
+  lsb_frame.save("frames/frame%d.png" % rand_frame3)
+ 
+  key = (rand_frame1, rand_frame2, rand_frame3)
+  return key
