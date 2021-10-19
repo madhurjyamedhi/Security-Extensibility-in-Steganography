@@ -1,0 +1,7 @@
+import cv2
+ 
+org_img = cv2.imread("/content/stegoImage.png")
+stego_img = cv2.imread("/content/recovered_stegImage.png", 1)
+psnr_val, mse_val = PSNR_MSE(org_img, stego_img)
+print("PSNR value : ", psnr_val)  
+print("MSE value : ", mse_val)
