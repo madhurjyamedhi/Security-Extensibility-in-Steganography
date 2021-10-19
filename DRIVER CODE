@@ -1,0 +1,14 @@
+if __name__ == '__main__':
+
+ acid_len, len_dna = dna_encrypt()
+
+ key = video_stegano()
+
+ pathIn= 'frames/'
+ pathOut = 'mer_video.avi'
+ fps = 25.0
+ merge_video(pathIn, pathOut, fps)
+
+ rec_stegImage(key)
+ decrypt_dna(acid_len, len_dna)
+
