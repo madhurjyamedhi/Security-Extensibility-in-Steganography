@@ -52,3 +52,100 @@ def rec_stegImage(key):
   rec_frame2.close()
   rec_frame3.close()
   recov_image.close()
+
+
+def nuc_to_bin(f):
+
+  asc_nuc = ""
+  for h in f:
+    if h == 'A':
+      asc_nuc += '00'
+    if h == 'C':
+      asc_nuc += '01'
+    if h == 'G':
+      asc_nuc += '10'
+    if h == 'T':
+      asc_nuc += '11'
+
+
+  return asc_nuc
+  
+  from PIL import Image
+
+def decrypt_dna(len_dna, mod_len):
+
+  steg_img = Image.open('recovered_stegImage.png')
+  steg_img_pixelMap = steg_img.load()
+
+  sec_msg = []
+  dna_index = 0
+  for row in range(steg_img.size[0]):
+    for col in range(steg_img .size[1]):
+
+      rgb_val = ""
+      if dna_index < len_dna :
+        r, g, b = rgb_to_bin(steg_img_pixelMap[row, col])
+        sec_r = r[6:]
+        sec_g = g[5:]
+        sec_b = b[5:]
+
+        rgb_val = sec_r + sec_g + sec_b
+        sec_msg.append(rgb_val)
+        print(sec_msg)
+        print(len(sec_msg))
+
+
+
+        dna_index += 8
+
+  steg_img.close()
+  
+  amino = []
+  for i in range(0, len(sec_msg), 2):
+    alp_bit = bin_to_int(sec_msg[i])
+    alp_bit = chr(alp_bit)
+    num_bit = bin_to_int(sec_msg[i+1])
+
+    amino.append(alp_bit)
+    amino.append(num_bit)
+
+    print(amino)
+
+
+
+  dec_codons = amino_to_codons(amino)
+  print(dec_codons)
+
+  dec_nucleods = ''.join(dec_codons)
+  print("joined nucleods: ", dec_nucleods)
+  #len_nuc = len(dec_nucleods) % 3
+
+  print(mod_len)
+  print("length of the dna nucleods: ", len(dec_nucleods))
+
+  d_nucleods = []
+  if mod_len == 1:
+    print(len(dec_nucleods)-2)
+    d_nucleods = dec_nucleods[:len(dec_nucleods)-2]
+  elif mod_len == 2:
+    print(len(dec_nucleods)-1)
+    d_nucleods = dec_nucleods[:len(dec_nucleods)-1]
+  else:
+    d_nucleods = dec_nucleods
+
+  print(d_nucleods)
+
+  nucli_bits = nuc_to_bin(d_nucleods)
+  print("nucli_bits:", nucli_bits) 
+
+
+  #grouping into 8bits binary
+  bin_bits = [nucli_bits[i:i+8] for i in range(0, len(nucli_bits), 8)]
+  print("bin_bits", bin_bits)
+
+  sec_text = ""
+  for txt in bin_bits:
+    w = bin_to_int(txt)
+    sec_text += chr(w)
+
+  print("Your secret message is :", sec_text)
