@@ -1,0 +1,20 @@
+import cv2
+from matplotlib import pyplot as plt
+ 
+ 
+org_image = cv2.imread('/content/frames/*.png', 0)
+hist1 = cv2.calcHist([org_image], [0], None, [256], [0, 256])
+plt.title("original image")
+plt.xlabel("grayscale value")
+plt.ylabel("pixels")
+plt.plot(hist1)
+plt.show()
+ 
+ 
+steg_image = cv2.imread('/content/recovered_frames/*.png', 0)
+hist2 = cv2.calcHist([steg_image], [0], None, [256], [0, 256])
+plt.title("stego image")
+plt.xlabel("grayscale value")
+plt.ylabel("pixels")
+plt.plot(hist2)
+plt.show()
